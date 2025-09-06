@@ -11,9 +11,15 @@ import {
   Layers
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { DashboardSection } from './sections/DashboardSection'
+import { DocumentsSection } from './sections/DocumentsSection'
+import { SectionsSection } from './sections/SectionsSection'
+import { UsersSection } from './sections/UsersSection'
+import { AnalyticsSection } from './sections/AnalyticsSection'
+import { SettingsSection } from './sections/SettingsSection'
 
 interface AdminLayoutProps {
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 const adminMenuItems = [
@@ -27,6 +33,25 @@ const adminMenuItems = [
 
 export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const [activeSection, setActiveSection] = useState('dashboard')
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'dashboard':
+        return <DashboardSection />
+      case 'documents':
+        return <DocumentsSection />
+      case 'sections':
+        return <SectionsSection />
+      case 'users':
+        return <UsersSection />
+      case 'analytics':
+        return <AnalyticsSection />
+      case 'settings':
+        return <SettingsSection />
+      default:
+        return <DashboardSection />
+    }
+  }
 
   const AdminSidebar = () => (
     <div className="w-64 h-full bg-card border-r border-border">
@@ -60,14 +85,14 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
 
   return (
     <div className="h-screen flex bg-background">
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block">
+      {/* Desktop Sidebar - Always visible */}
+      <div className="hidden md:block">
         <AdminSidebar />
       </div>
       
       {/* Mobile Sidebar */}
       <Sheet>
-        <div className="lg:hidden">
+        <div className="md:hidden">
           <div className="flex items-center gap-4 p-4 border-b border-border">
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -86,7 +111,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 overflow-auto">
-          {children}
+          {renderContent()}
         </main>
       </div>
     </div>
